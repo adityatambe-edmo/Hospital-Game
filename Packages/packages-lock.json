@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "app.rive.rive-unity": {
+      "version": "git@github.com:rive-app/rive-unity.git?path=package#v0.4.1",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.shadergraph": "14.0.11"
+      },
+      "hash": "b321154bff4a5879b73062d72bea266234ba8628"
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.10",
       "depth": 0,
