@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hospital Game – Flow Map</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0f1117;
+    font-family: 'Segoe UI', sans-serif;
+    color: #e0e0e0;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    color: #ffffff;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 40px;
+  }
+
+  /* ── LAYOUT ── */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* ── STATE NODES ── */
+  .state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 820px;
+  }
+
+  .state-row {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    gap: 16px;
+  }
+
+  .node {
+    border-radius: 12px;
+    padding: 16px 20px;
+    min-width: 180px;
+    text-align: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .node-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+  .node-title {
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .node-sub {
+    font-size: 11px;
+    margin-top: 4px;
+    opacity: 0.65;
+  }
+
+  /* colours */
+  .col-start    { background: #1a2a1a; border: 2px solid #4caf50; }
+  .col-start .node-title { color: #81c784; }
+  .col-triage   { background: #1a2233; border: 2px solid #42a5f5; }
+  .col-triage .node-title { color: #90caf9; }
+  .col-diag     { background: #231a33; border: 2px solid #ab47bc; }
+  .col-diag .node-title   { color: #ce93d8; }
+  .col-ward     { background: #1f2a1a; border: 2px solid #66bb6a; }
+  .col-ward .node-title   { color: #a5d6a7; }
+  .col-mini     { background: #2a1f1a; border: 2px solid #ffa726; }
+  .col-mini .node-title   { color: #ffcc80; }
+  .col-treated  { background: #1a2a28; border: 2px solid #26c6da; }
+  .col-treated .node-title{ color: #80deea; }
+  .col-fail     { background: #2a1a1a; border: 2px solid #ef5350; }
+  .col-fail .node-title   { color: #ef9a9a; }
+
+  /* ── RIGHT SIDE PANELS ── */
+  .side-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 4px;
+  }
+  .pill {
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .pill-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+
+  .pill-event   { background: #1e1a2e; border-left: 3px solid #9c27b0; }
+  .pill-event .pill-title { color: #ce93d8; }
+
+  .pill-trigger { background: #1a1e2e; border-left: 3px solid #1976d2; }
+  .pill-trigger .pill-title { color: #90caf9; }
+
+  .pill-ui      { background: #1a2e1e; border-left: 3px solid #388e3c; }
+  .pill-ui .pill-title { color: #a5d6a7; }
+
+  .pill-code    { background: #2e1a1a; border-left: 3px solid #e64a19; }
+  .pill-code .pill-title { color: #ffab91; }
+
+  /* ── ARROWS ── */
+  .arrow-down {
+    width: 2px;
+    height: 32px;
+    background: #444;
+    margin: 0 auto;
+    position: relative;
+  }
+  .arrow-down::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #444;
+  }
+  .arrow-label {
+    text-align: center;
+    font-size: 10px;
+    color: #555;
+    margin: 2px 0 -4px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .section-title {
+    font-size: 10px;
+    color: #444;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 6px 0 2px;
+  }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 40px;
+    padding: 16px 20px;
+    background: #161920;
+    border-radius: 10px;
+    border: 1px solid #222;
+    max-width: 820px;
+    width: 100%;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: #aaa;
+  }
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  /* ── BRANCH ROW ── */
+  .branch-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+    max-width: 820px;
+  }
+  .branch-node {
+    flex: 1;
+  }
+  .branch-connector {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 120px;
+    position: relative;
+    height: 30px;
+    max-width: 820px;
+  }
+  .branch-connector::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 2px;
+    background: #444;
+  }
+  .branch-line-left, .branch-line-right {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 30px;
+    background: #444;
+  }
+  .branch-line-left  { left: calc(50% - 60px); }
+  .branch-line-right { left: calc(50% + 60px); }
+  .branch-line-left::after, .branch-line-right::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #444;
+  }
+  .fail-label {
+    text-align: center;
+    font-size: 10px;
+    color: #ef5350;
+    margin-top: 2px;
+  }
+  .ok-label {
+    text-align: center;
+    font-size: 10px;
+    color: #66bb6a;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="flow">
+  <h1>🏥 Hospital Game — Flow Map</h1>
+  <p class="subtitle">How every state, event, and script connects</p>
+
+  <!-- ══ GAME START ══ -->
+  <div class="state">
+    <div class="state-row">
+      <div class="node col-start" style="margin-top:4px">
+        <div class="node-label">State</div>
+        <div class="node-title">Game Start</div>
+        <div class="node-sub">App launches</div>
+      </div>
+      <div class="side-panel">
+        <div class="pill pill-trigger">
+          <div class="pill-title">🖱 Button click</div>
+          "Start Game" button on MainMenuPanel<br>
+          → calls <code>PatientStateMachine.StartGame()</code>
+        </div>
+        <div class="pill pill-ui">
+          <div class="pill-title">📺 UI visible</div>
+          MainMenuPanel is shown by default in <code>UI_Manager.Start()</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-label">StartGame() → TransitionTo(Triage)</div>
+  <div class="arrow-down"></div>
+
+  <!-- ══ TRIAGE ══ -->
+  <div class="state">
+    <div class="state-row">
+      <div class="node col-triage" style="margin-top:4px">
+        <div class="node-label">State</div>
+        <div class="node-title">Triage</div>
+        <div class="node-sub">Patient arrives</div>
+      </div>
+      <div class="side-panel">
+        <div class="pill pill-event">
+          <div class="pill-title">📢 Event fired</div>
+          <code>GameManager.onDashboardRequest.Invoke()</code>
+        </div>
+        <div class="pill pill-trigger">
+          <div class="pill-title">⚙ Wired to (Inspector)</div>
+          1. <code>UI_Manager.showUI_Panel(WardPanel)</code><br>
+          2. <code>PatientController.LoadPatient()</code>
+        </div>
+        <div class="pill pill-ui">
+          <div class="pill-title">📺 UI visible</div>
+          WardPanel — shows patient name + symptoms
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-label">GoToDiagnosis() → TransitionTo(Diagnostic)</div>
+  <div class="arrow-down"></div>
+
+  <!-- ══ DIAGNOSTIC ══ -->
+  <div class="state">
+    <div class="state-row">
+      <div class="node col-diag" style="margin-top:4px">
+        <div class="node-label">State</div>
+        <div class="node-title">Diagnostic</div>
+        <div class="node-sub">Player diagnoses</div>
+      </div>
+      <div class="side-panel">
+        <div class="pill pill-event">
+          <div class="pill-title">📢 Event fired</div>
+          <code>GameManager.onDiagnosticRequest.Invoke()</code>
+        </div>
+        <div class="pill pill-trigger">
+          <div class="pill-title">⚙ Wired to (Inspector)</div>
+          1. <code>UI_Manager.showUI_Panel(DiagnosisPanel)</code>
+        </div>
+        <div class="pill pill-ui">
+          <div class="pill-title">📺 UI visible</div>
+          DiagnosisPanel — buttons for each condition
+        </div>
+        <div class="pill pill-code">
+          <div class="pill-title">💻 Logic in code</div>
+          <code>DiagnosisUI.CheckDiagnosis(selected)</code><br>
+          compares to <code>patientCase.correctDiagnosis</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- branch connector -->
+  <div style="height:12px; width:2px; background:#444; margin:0 auto;"></div>
+  <div style="display:flex; justify-content:center; gap:0; width:300px; max-width:100%;">
+    <div style="width:50%; border-top:2px solid #444; border-left:2px solid #444; height:20px;"></div>
+    <div style="width:50%; border-top:2px solid #444; border-right:2px solid #444; height:20px;"></div>
+  </div>
+
+  <div class="branch-row" style="gap:10px">
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center;">
+      <div class="fail-label">❌ Wrong diagnosis</div>
+      <div class="arrow-down" style="background:#ef5350"></div>
+      <div class="arrow-down" style="background:#ef5350; height:0"></div>
+      <div class="node col-fail" style="width:100%; text-align:center; padding:12px 10px;">
+        <div class="node-label">Result</div>
+        <div class="node-title">Try Again</div>
+        <div class="node-sub">Stay on DiagnosisPanel<br>show error message</div>
+      </div>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center;">
+      <div class="ok-label">✅ Correct diagnosis</div>
+      <div class="arrow-down" style="background:#66bb6a"></div>
+      <div class="node col-ward" style="width:100%; text-align:center; padding:12px 10px;">
+        <div class="node-label">State</div>
+        <div class="node-title">Ward</div>
+        <div class="node-sub">Patient admitted</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex; justify-content:center; gap:0; width:300px; max-width:100%; margin-left:calc(50% + 5px); transform:translateX(-50%);">
+    <!-- just a straight arrow down from the right branch -->
+  </div>
+
+  <!-- reconnect right branch down -->
+  <div style="width:100%; max-width:820px; display:flex; justify-content:flex-end;">
+    <div style="display:flex; flex-direction:column; align-items:center; width:50%;">
+      <div class="pill pill-event" style="width:calc(100% - 20px); margin: 6px 0 0 0; font-size:11px; padding:8px 12px;">
+        <div class="pill-title">📢 Event fired</div>
+        <code>GameManager.onMovingToWard.Invoke()</code><br>
+        + <code>Economy.AddMoney(500)</code>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-label" style="align-self:flex-end; width:50%; max-width:410px;">GoToMiniGame() → TransitionTo(MiniGame)</div>
+  <div class="arrow-down" style="align-self:flex-end; margin-right: calc(25% - 1px);"></div>
+
+  <!-- ══ MINIGAME ══ -->
+  <div class="state">
+    <div class="state-row">
+      <div class="node col-mini" style="margin-top:4px">
+        <div class="node-label">State</div>
+        <div class="node-title">Mini Game</div>
+        <div class="node-sub">Treatment task</div>
+      </div>
+      <div class="side-panel">
+        <div class="pill pill-event">
+          <div class="pill-title">📢 Event fired</div>
+          <code>GameManager.onMiniGameStart.Invoke()</code>
+        </div>
+        <div class="pill pill-trigger">
+          <div class="pill-title">⚙ Wired to (Inspector)</div>
+          1. <code>UI_Manager.showUI_Panel(MiniGamePanel)</code>
+        </div>
+        <div class="pill pill-code">
+          <div class="pill-title">💻 Logic in code</div>
+          <code>MiniGameManager.OnSuccess()</code><br>
+          → calls <code>PatientStateMachine.PatientTreated()</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-label">PatientTreated() → TransitionTo(Treated)</div>
+  <div class="arrow-down"></div>
+
+  <!-- ══ TREATED ══ -->
+  <div class="state">
+    <div class="state-row">
+      <div class="node col-treated" style="margin-top:4px">
+        <div class="node-label">State</div>
+        <div class="node-title">Treated ✓</div>
+        <div class="node-sub">Patient cured</div>
+      </div>
+      <div class="side-panel">
+        <div class="pill pill-event">
+          <div class="pill-title">📢 Event fired</div>
+          <code>GameManager.onPatientTreated.Invoke()</code>
+        </div>
+        <div class="pill pill-trigger">
+          <div class="pill-title">⚙ Wired to (Inspector)</div>
+          1. <code>UI_Manager.showUI_Panel(ResultsPanel)</code><br>
+          2. <code>Economy.AddMoney</code> → type <code>500</code> in Inspector
+        </div>
+        <div class="pill pill-ui">
+          <div class="pill-title">📺 UI visible</div>
+          Results screen — money earned, "Next Patient" button
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-label">NextPatient() → TransitionTo(Triage)</div>
+  <div class="arrow-down"></div>
+
+  <!-- loop back label -->
+  <div class="node" style="background:#161920; border:2px dashed #444; padding:10px 24px; border-radius:10px; color:#666; font-size:12px; letter-spacing:1px;">
+    🔁 &nbsp; Loop — new patient begins
+  </div>
+
+  <!-- ══ LEGEND ══ -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#9c27b0"></div> Event fires (in code, automatically)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1976d2"></div> Trigger wired in Inspector</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#388e3c"></div> UI panel shown</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e64a19"></div> Logic handled in a script</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ef5350"></div> Wrong path (stay on same state)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#66bb6a"></div> Correct path (advance to next state)</div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -13,25 +13,21 @@ public enum PatientState
 public class PatientStateMachine : MonoBehaviour
 {
     private GameManager gameManager;
-    private PatientState currentState;
+    public PatientState currentState;
     private PatientCase patientCase;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         gameManager = GetComponent<GameManager>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    void TransistionTo(PatientState newState)
+    public void TransitionTo(PatientState newState)
     {
         currentState = newState;
         switch (currentState)
         {
+            case PatientState.GameStart:
+                gameManager.onGameStart.Invoke();
+                break;
             case PatientState.Triage:
                 gameManager.onDashboardRequest.Invoke();
                 break;

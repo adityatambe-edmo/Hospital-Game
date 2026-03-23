@@ -1,16 +1,15 @@
-using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Medical Condition", menuName = "Hospital/Medical Condition")]
 public class MedicalCondition : ScriptableObject
 {
     [Header("Medical Condition Information")]
-    public String conditionName;
+    public string conditionName;
     [TextArea(3, 10)]
-    public String conditionDescription;
-    public String syllabusCode;
+    public string conditionDescription;
+    public string syllabusCode;
     public WardConfig treatedInWard;
-    public String possibleSymptoms;
+    public string possibleSymptoms;
     public Sprite conditionImage;
 
     // [Header("TreatmentTests")]

@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 [CreateAssetMenu(fileName = "New Ward Config", menuName = "Hospital/Ward Config")]
 public class WardConfig : ScriptableObject
