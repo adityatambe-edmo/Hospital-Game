@@ -24,4 +24,8 @@ public class PatientCase : ScriptableObject
 
     [System.NonSerialized]
     public MedicalCondition medicalCondition;
+
+    [Header("Dialogue")]
+    [TextArea(3, 10)]
+    public string[] dialogueLines;
 }

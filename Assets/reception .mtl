@@ -1,0 +1,107 @@
+# Blender 5.1.0 MTL File: 'reception .blend'
+# www.blender.org
+
+newmtl Black_matte_metal.002
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd painted_metal_diffuse.jpg
+map_Ks painted_metal_specular.jpg
+map_refl painted_metal_metallic.jpg
+map_Bump -bm 1.000000 painted_metal_normal_opengl.jpg
+
+newmtl Clean_chrome.002
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd clean chrome_BaseColor.jpg
+map_Ns clean chrome_Roughness.jpg
+map_refl clean chrome_Metallic.jpg
+map_Bump -bm 1.000000 clean chrome_Normal.jpg
+
+newmtl Lamp.002
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Material.001
+Ns 404.453827
+Ka 1.000000 1.000000 1.000000
+Ks 0.414545 0.414545 0.414545
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Textures.png
+
+newmtl Material.003
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800243 0.325123 0.089743
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl Metal.001
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800016 0.616269 0.123358
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+
+newmtl Metal_Chrome
+Ns 640.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+
+newmtl Plastic_Black_Insulator
+Ns 159.999985
+Ka 1.000000 1.000000 1.000000
+Kd 0.002000 0.002000 0.002000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Pyrex_Glass
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Simple_wood.002
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wood31_diffuse.jpg
+map_Ns wood31_roughness.jpg
+map_Bump -bm 1.000000 wood31_opengl_normal.jpg
